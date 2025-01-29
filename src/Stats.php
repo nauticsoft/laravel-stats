@@ -81,10 +81,10 @@ class Stats
         }
 
         DB::table('stats')->upsert([
-            ['timestamp' => $date->timestamp, 'type' => $this->type, 'key' => $key, 'value' => $value],
+            ['timestamp' => $date->timestamp, 'type' => $this->type, 'key' => $key, 'value' => $value, 'created_at' => now(), 'updated_at' => now()],
         ],
             ['timestamp', 'type', 'key'],
-            ['value']
+            ['value', 'updated_at']
         );
 
         return $this;
