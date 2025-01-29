@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->index('timestamp');
             $table->index('type');
-            $table->index(['timestamp', 'type', 'value']);
+            $table->unique(['timestamp', 'type', 'key']);
         });
     }
 

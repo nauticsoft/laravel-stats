@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\CarbonImmutable;
 use Nauticsoft\LaravelStats\Models\Stat;
 
 test('to array', function () {
@@ -17,4 +18,16 @@ test('to array', function () {
         'key',
         'value',
     ]);
+});
+
+test('casts', function () {
+    $stat = Stat::create([
+        'timestamp' => now(),
+        'type' => 'test-type',
+        'key' => 'test-key',
+        'value' => 1000,
+    ])->fresh();
+
+    expect($stat->timestamp)->toBeInstanceof(CarbonImmutable::class);
+    expect($stat->value)->toBeInt();
 });

@@ -11,7 +11,7 @@
 |
 */
 
-pest()->extend(Nauticsoft\LaravelStats\Tests\TestCase::class)->in('Unit');
+pest()->extend(Nauticsoft\LaravelStats\Tests\TestCase::class)->in('Unit', 'Feature');
 
 /*
 |--------------------------------------------------------------------------
