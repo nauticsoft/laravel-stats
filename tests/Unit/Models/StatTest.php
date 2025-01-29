@@ -2,7 +2,7 @@
 
 use Nauticsoft\LaravelStats\Models\Stat;
 
-test('to array', function() {
+test('to array', function () {
     $stat = Stat::create([
         'timestamp' => now(),
         'type' => 'test-type',
@@ -15,6 +15,6 @@ test('to array', function() {
         'timestamp',
         'type',
         'key',
-        'value'
+        'value',
     ]);
 });
