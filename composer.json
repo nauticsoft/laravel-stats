@@ -45,10 +45,12 @@
         "refactor": "@php vendor/bin/rector",
         "test:lint": "@php vendor/bin/pint --test",
         "test:refactor": "@php vendor/bin/rector --dry-run",
+        "test:code": "@php vendor/bin/phpstan",
         "test:unit": "@php vendor/bin/pest",
         "test": [
             "@test:lint",
             "@test:refactor",
+            "@test:code",
             "@test:unit"
         ]
     },
