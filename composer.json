@@ -28,6 +28,13 @@
             "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Nauticsoft\\LaravelStats\\LaravelStatsServiceProvider"
+            ]
+        }
+    },
     "scripts": {
         "post-autoload-dump": [
             "@clear",
