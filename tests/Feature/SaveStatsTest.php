@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use Nauticsoft\LaravelStats\DataTransferObjects\Metric;
 use Nauticsoft\LaravelStats\Facades\Stats;
 
 it('creates stats', function () {
@@ -35,3 +36,26 @@ it('updates stats', function () {
 it('cannot create stats without a type', function () {
     Stats::save(now(), 'count', 12);
 })->throws(UnexpectedValueException::class);
+
+it('can save stats in bulk', function () {
+    Stats::type('request')->bulkSave([
+        new Metric(now(), 'count', 12),
+        new Metric(now()->subDay(), 'count', 2),
+    ]);
+
+    [$first, $last] = DB::table('stats')->get();
+    expect(DB::table('stats')->count())->toBe(2)
+        ->and($first->timestamp)->toBe(now()->timestamp)
+        ->and($first->type)->toBe('request')
+        ->and($first->key)->toBe('count')
+        ->and($first->value)->toBe(12)
+        ->and($first->created_at)->toBe(now()->format('Y-m-d H:i:s'))
+        ->and($first->updated_at)->toBe(now()->format('Y-m-d H:i:s'))
+        ->and($last->timestamp)->toBe(now()->subDay()->timestamp)
+        ->and($last->type)->toBe('request')
+        ->and($last->key)->toBe('count')
+        ->and($last->value)->toBe(2)
+        ->and($last->created_at)->toBe(now()->format('Y-m-d H:i:s'))
+        ->and($last->updated_at)->toBe(now()->format('Y-m-d H:i:s'));
+
+});

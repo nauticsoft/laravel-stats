@@ -5,6 +5,7 @@ namespace Nauticsoft\LaravelStats;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Nauticsoft\LaravelStats\DataTransferObjects\Metric;
 use Nauticsoft\LaravelStats\Models\Stat;
 use UnexpectedValueException;
 
@@ -86,6 +87,31 @@ class Stats
             ['timestamp', 'type', 'key'],
             ['value', 'updated_at']
         );
+
+        return $this;
+    }
+
+    /**
+     * @param  Metric[]  $metrics
+     */
+    public function bulkSave(array $metrics): self
+    {
+        if ($this->type === null) {
+            throw new UnexpectedValueException('No type defined.');
+        }
+
+        $rows = collect($metrics)->map(function (Metric $metric) {
+            return [
+                'timestamp' => $metric->date->timestamp,
+                'type' => $this->type,
+                'key' => $metric->key,
+                'value' => $metric->value,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        })->toArray();
+
+        DB::table('stats')->upsert($rows, ['timestamp', 'type', 'key'], ['value', 'updated_at']);
 
         return $this;
     }
