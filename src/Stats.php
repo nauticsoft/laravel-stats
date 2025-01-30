@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Nauticsoft\LaravelStats\DataTransferObjects\Metric;
-use Nauticsoft\LaravelStats\Models\Stat;
+use stdClass;
 use UnexpectedValueException;
 
 class Stats
@@ -56,7 +56,7 @@ class Stats
             throw new UnexpectedValueException('No type defined.');
         }
 
-        $query = Stat::query()->where('type', $this->type);
+        $query = DB::table('stats')->where('type', $this->type);
 
         if ($this->startDate !== null) {
             $query->where('timestamp', '>=', $this->startDate->timestamp);
@@ -68,8 +68,10 @@ class Stats
 
         $query->orderBy('timestamp', 'desc');
 
-        return $query->get()->map(fn ($item) => [
-            'date' => $item->timestamp->format($this->dateFormat),
+        // @phpstan-ignore return.type
+        return $query->get()->map(fn (stdClass $item) => [
+            // @phpstan-ignore argument.type
+            'date' => Carbon::createFromTimestamp($item->timestamp)->format($this->dateFormat),
             'key' => $item->key,
             'value' => $item->value,
         ]);
